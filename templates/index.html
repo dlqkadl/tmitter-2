@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+{% load user_tags %}
+{% block title %}{{ page_title }}{% endblock %}
+{% block head_link %}
+{% if user %}
+<link rel="alternate" type="application/rss+xml" title="{{ user.realname }} {% trans 'recent message' %}"
+      href="/user/feed/rss/recent/{{ user.username }}"/>
+{% else %}
+<link rel="alternate" type="application/rss+xml" title="{% trans 'Recent message of everyone' %}"
+      href="feed/rss/recent/" />
+{% endif %}
+{% endblock %}
+
+{% block main %}
+    {% if user %}
+        <div class="userinfo">
+            {% include 'include/userinfo.html' %}
+        </div>
+    {% else %}
+        {% include 'include/postform.html' %}
+    {% endif %}
+    {% if islogin %}
+        {% if self_home %}
+            {% include 'include/postform.html' %}
+        {% endif %}
+    {% endif %}
+
+    <div class="list">
+        <ol>
+         {% for item in notes %}
+         <li>
+             {% include 'include/list_item.html' %}
+         </li>
+         {% endfor %}
+        </ol>
+        <div class="pagebar">
+            {{ page_bar|safe }}     <!-- 分页条 -->
+        </div>
+    </div>
