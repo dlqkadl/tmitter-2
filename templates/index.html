@@ -33,11 +33,31 @@
         <ol>
          {% for item in notes %}
          <li>
-             {% include 'include/list_item.html' %}
+             {% include 'include/list_item.html' %}     <!-- 用另外一个子模版显示信息条目 -->
          </li>
          {% endfor %}
         </ol>
         <div class="pagebar">
             {{ page_bar|safe }}     <!-- 分页条 -->
+            {% if user %}
+                <a href="/user/feed/rss/recent/{{ user.name }}" title="{% trans 'Subscription' %}"></a>
+            {% else %}
+                <a href="/feed/rss/recent/" title="{% trans 'Subscription' %}"></a>
+            {% endif %}
+            <img src="/statics/images/feed.png" style="border:0; margin-bottom:-2px;"
+                 alt="feed icon" />     <!-- logo图标 -->
         </div>
     </div>
+
+    {% if user %}
+    <div class="friends">
+        <h3>{{ user.realname }}{% trans '"s friends' %}</h3>
+        <div class="list">
+            {% for friend in friends %}
+            <a href="{% url 'tmitter-mvc-views-index_user' friend.username %}" title="{{ friend.realname }}">
+                <img src="{{ friend.face|face16 }}" alt="{{ friend.realname }}" class="face16" />
+            </a>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}
